@@ -1,1 +1,3 @@
-*.o
+*.out
+# This is used to test the concepts
+test.c

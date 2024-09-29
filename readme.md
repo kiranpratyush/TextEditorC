@@ -29,9 +29,13 @@ After VTIME read will send -1 without reading
 
 
 
-### TO Learn in depth
+### What are file descriptors
 
 1. What are file descriptors
+   1. File descriptors are the integers which tells identifies all the open files by a process
+   2. Mostly any external file starts with the integer 3 because STD_INPUT is marked as 0 , STD_OUT is marked as 1 and STD_ERR is marked as 2;
+### How to detect which contol character is pressed
+
 
 
 https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html

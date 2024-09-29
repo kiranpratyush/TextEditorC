@@ -6,6 +6,8 @@
 #include<ctype.h>
 #include<errno.h>
 
+#define CNTRL_KEY(k) ((k)&0x1f)
+
 struct termios original_terminal_state ;
 
 void disableraw()
@@ -59,7 +61,7 @@ while(1)
     {
         printf("%d %c \r\n",c,c);
     }
-    if(c=='q')
+    if(c==CNTRL_KEY('c'))
     {
         break;
     }
