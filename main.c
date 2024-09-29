@@ -7,12 +7,17 @@
 // Macro definition of the CNTRL_KEY detection
 #define CNTRL_KEY(k) ((k) & 0x1f)
 
+// function defintions
+
+void clean_up_and_reset_cursor();
+
 // global terminal state
 struct termios original_terminal_state;
 
 // exit the program with error
 void die(char *s)
 {
+    clean_up_and_reset_cursor();
     perror(s);
     exit(1);
 }
@@ -66,9 +71,40 @@ void preprocess_key_press()
     switch (c)
     {
     case CNTRL_KEY('q'):
+        clean_up_and_reset_cursor();
         exit(0);
         break;
     }
+}
+
+// Refresh the editor screen
+
+void clean_up_and_reset_cursor()
+{
+    // This clears up the terminal
+    write(STDOUT_FILENO, "\x1b[2J", 4);
+    // This does the reposition of cursor
+    write(STDOUT_FILENO, "\x1b[H", 3);
+}
+
+
+
+void draw_hash_on_screen()
+{
+    for(int i=0;i<24;i++)
+    {
+        write(STDOUT_FILENO,"#\r\n",3);
+        
+
+
+    }
+}
+
+void refresh_editor_screen()
+{
+    clean_up_and_reset_cursor();
+    draw_hash_on_screen();
+    write(STDOUT_FILENO, "\x1b[H", 3);
 }
 
 int main()
@@ -76,6 +112,7 @@ int main()
     read_terminal_state();
     enable_raw_mode();
     atexit(disableraw);
+    refresh_editor_screen();
     while (1)
     {
         preprocess_key_press();

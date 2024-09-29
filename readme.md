@@ -34,6 +34,7 @@ After VTIME read will send -1 without reading
 1. What are file descriptors
    1. File descriptors are the integers which tells identifies all the open files by a process
    2. Mostly any external file starts with the integer 3 because STD_INPUT is marked as 0 , STD_OUT is marked as 1 and STD_ERR is marked as 2;
+   
 ### How to detect which contol character is pressed
 1. ASCII control characters
    1. 0-31 in ASCII represents the control characters
@@ -41,6 +42,21 @@ After VTIME read will send -1 without reading
    3. control+[character] represent the character with the 3 high bits cleared
    4. so mask 0x1f : 00011111 when anding with the characters clears the higher 3 bits
    5. so we get the control character so for example mask with character q makes the value control+q
+
+### ASCII escape sequences
+1. What are escape sequences
+   1. Escape sequences are are certain sequences of bytes starting with the escape character, which terminal interprets as commands rather than literal text meaning
+   2. Which can be used to control cursor positions,text formatting etc.colors etc.
+2. Use the escape sequence to clean up the terminal and position the cursor (DONE)
+3. Now write # to the start of the terminal screen
+
+### Findout the window size
+1. Find the window size based on cursor position
+   1. First send the cursor to the bottom right corner (Use escape sequence)
+   2. Again use the escape sequence to request to get the cursor sequence ( write this to the STDOUT)
+   3. Use the buffer to read from the STDIN
+   4. Parse the sequence using sscanf
+   5. Update the editor config
 
 
 
