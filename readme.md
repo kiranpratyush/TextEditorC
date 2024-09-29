@@ -35,6 +35,12 @@ After VTIME read will send -1 without reading
    1. File descriptors are the integers which tells identifies all the open files by a process
    2. Mostly any external file starts with the integer 3 because STD_INPUT is marked as 0 , STD_OUT is marked as 1 and STD_ERR is marked as 2;
 ### How to detect which contol character is pressed
+1. ASCII control characters
+   1. 0-31 in ASCII represents the control characters
+   2. Then from 64-95 (lower case) and (96-127) represents the characters
+   3. control+[character] represent the character with the 3 high bits cleared
+   4. so mask 0x1f : 00011111 when anding with the characters clears the higher 3 bits
+   5. so we get the control character so for example mask with character q makes the value control+q
 
 
 
