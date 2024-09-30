@@ -10,10 +10,49 @@
 // function defintions
 
 void clean_up_and_reset_cursor();
+void die(char *);
 
 // global terminal state
 struct termios original_terminal_state;
+// Global terminal_size
+struct terminal_size
+{
+    int n_cols;
+    int n_rows;
+};
 
+struct terminal_size global_terminal_size;
+
+void update_terminal_size()
+{ // Move the terminal to the right bottom right
+    printf("\033[999C\033[999B");
+    // Now request the cursor position
+    printf("\033[6n");
+    fflush(stdout);
+    // Now read byte by byte
+    char buf[32];
+    int i = 0;
+    while (i < 32)
+    {
+        if (read(STDIN_FILENO, &buf[i], 1) != 1)
+            break;
+        if (buf[i] == 'R')
+            break;
+        i++;
+    }
+    // Add the the null char to the end buf
+    buf[i] = '\0';
+    int rows, cols;
+    // Use sscanf to parse the format
+    if (sscanf(buf, "\033[%d;%dR", &(&global_terminal_size)->n_rows, &(&global_terminal_size)->n_cols) != 2)
+    {
+        die("terminal");
+
+    }
+    printf("\033[u");
+    fflush(stdout);
+        
+}
 // exit the program with error
 void die(char *s)
 {
@@ -87,16 +126,11 @@ void clean_up_and_reset_cursor()
     write(STDOUT_FILENO, "\x1b[H", 3);
 }
 
-
-
 void draw_hash_on_screen()
 {
-    for(int i=0;i<24;i++)
+    for (int i = 0; i < global_terminal_size.n_rows; i++)
     {
-        write(STDOUT_FILENO,"#\r\n",3);
-        
-
-
+        write(STDOUT_FILENO, "#\r\n", 3);
     }
 }
 
@@ -112,6 +146,7 @@ int main()
     read_terminal_state();
     enable_raw_mode();
     atexit(disableraw);
+    update_terminal_size();
     refresh_editor_screen();
     while (1)
     {
